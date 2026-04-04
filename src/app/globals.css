@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+
+:root {
+  --paper: #f0e6d3;
+  --accent: #8b5e3c;
+  --ink: #3d2b1f;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: 'Noto Serif SC', serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Flip book animation */
+.flip-container {
+  perspective: 1200px;
+}
+
+.flip-page {
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: left center;
+  backface-visibility: hidden;
+}
+
+.flip-page-back {
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+}
+
+.flip-page.flipped {
+  transform: rotateY(-180deg);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 94, 60, 0.3);
+  border-radius: 2px;
+}
+
+/* Textarea styling */
+textarea:focus {
+  outline: none;
+}
+
+/* Streaming text animation */
+@keyframes fadeInChar {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.stream-text {
+  animation: fadeInChar 0.15s ease-in;
+}
+
+/* Page transition */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: slideUp 0.4s ease-out;
+}

@@ -3,8 +3,35 @@ import { NextRequest } from "next/server";
 
 function getClient() {
   const apiKey = process.env.SILICONFLOW_API_KEY || "";
-  // 调试：打印 key 前8位，确认是否读到
+  // 调试信息
+  console.log("CWD:", process.cwd());
   console.log("ENV KEY:", apiKey ? apiKey.slice(0, 8) + "..." : "(空)");
+  console.log("所有含 SILICON 的环境变量:", Object.keys(process.env).filter(k => k.includes("SILICON")));
+
+  // 如果 env 没读到，尝试手动从文件读取
+  if (!apiKey) {
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const envPath = path.join(process.cwd(), ".env.local");
+      console.log(".env.local 是否存在:", fs.existsSync(envPath));
+      if (fs.existsSync(envPath)) {
+        const content = fs.readFileSync(envPath, "utf-8");
+        const match = content.match(/SILICONFLOW_API_KEY=(.+)/);
+        if (match) {
+          const fallbackKey = match[1].trim();
+          console.log("从文件手动读取成功:", fallbackKey.slice(0, 8) + "...");
+          return new OpenAI({
+            apiKey: fallbackKey,
+            baseURL: "https://api.siliconflow.cn/v1",
+          });
+        }
+      }
+    } catch (e) {
+      console.log("手动读取失败:", e);
+    }
+  }
+
   return new OpenAI({
     apiKey,
     baseURL: "https://api.siliconflow.cn/v1",

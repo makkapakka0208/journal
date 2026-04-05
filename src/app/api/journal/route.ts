@@ -1,10 +1,12 @@
 import OpenAI from "openai";
 import { NextRequest } from "next/server";
 
-const client = new OpenAI({
-  apiKey: process.env.SILICONFLOW_API_KEY || "",
-  baseURL: "https://api.siliconflow.cn/v1",
-});
+function getClient() {
+  return new OpenAI({
+    apiKey: process.env.SILICONFLOW_API_KEY || "",
+    baseURL: "https://api.siliconflow.cn/v1",
+  });
+}
 
 const SYSTEM_PROMPT = `你是一个文学气质的日记助手。用户会给你一段今天的记录或感悟，请你帮助排版成以下格式：
 
@@ -41,6 +43,7 @@ export async function POST(request: NextRequest) {
 
   const userMessage = `今天是${date}。以下是我今天的记录：\n\n${content}`;
 
+  const client = getClient();
   const stream = await client.chat.completions.create({
     model: "Qwen/Qwen2.5-7B-Instruct",
     messages: [

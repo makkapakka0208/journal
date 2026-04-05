@@ -2,8 +2,11 @@ import OpenAI from "openai";
 import { NextRequest } from "next/server";
 
 function getClient() {
+  const apiKey = process.env.SILICONFLOW_API_KEY || "";
+  // 调试：打印 key 前8位，确认是否读到
+  console.log("ENV KEY:", apiKey ? apiKey.slice(0, 8) + "..." : "(空)");
   return new OpenAI({
-    apiKey: process.env.SILICONFLOW_API_KEY || "",
+    apiKey,
     baseURL: "https://api.siliconflow.cn/v1",
   });
 }
